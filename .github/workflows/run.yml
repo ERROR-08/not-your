@@ -15,8 +15,9 @@ jobs:
         uses: actions/checkout@v3
         with:
           repository: ERROR-08/check
-          token: ${{ secrets.PAT }}
+          token: ${{ secrets.MY_GITHUB_TOKEN }}
 
       - name: Run Your Code
-      - run: npm install
-      - run: npm start
+        run: |
+          echo "Running code from private repo..."
+          # Yaha tum jo bhi script ya command run karwana chahte ho wo likho
