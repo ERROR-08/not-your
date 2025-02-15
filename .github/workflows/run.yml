@@ -13,13 +13,18 @@ jobs:
   run-private-code:
     runs-on: ubuntu-latest
     steps:
+      - name: Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.12.0
+        with:
+          access_token: ${{ secrets.MY_GITHUB_TOKEN }} # Updated Token
+
       - name: Checkout Public Repo
         uses: actions/checkout@v3
 
       - name: Checkout Private Repo Code
         uses: actions/checkout@v3
         with:
-          repository: ERROR-08/check
+          repository: Sonakhan1/Ruhani-Bot
           token: ${{ secrets.MY_GITHUB_TOKEN }}
 
       - name: Install Dependencies
