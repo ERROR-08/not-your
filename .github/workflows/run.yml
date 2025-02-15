@@ -5,17 +5,14 @@ on:
     types: [private_repo_updated]
   workflow_dispatch:  # ✅ Manual Trigger Enable Kiya
 
+concurrency: private-repo-run  # ✅ Ensure only one workflow runs at a time
+
 jobs:
   run-private-code:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Public Repo
         uses: actions/checkout@v3
-        
-      - name: Cancel Previous Runs
-        uses: styfle/cancel-workflow-action@0.12.0
-        with:
-          access_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Checkout Private Repo Code
         uses: actions/checkout@v3
