@@ -3,6 +3,7 @@ name: Run on Private Repo Update
 on:
   repository_dispatch:
     types: [private_repo_updated]
+  workflow_dispatch:  # ✅ Manual Trigger Enable Kiya
 
 jobs:
   run-private-code:
@@ -19,15 +20,15 @@ jobs:
       - name: Checkout Private Repo Code
         uses: actions/checkout@v3
         with:
-          repository: ERROR-08/check
-          token: ${{ secrets.MY_GITHUB_TOKEN }}
+          repository: <USERNAME>/<PRIVATE_REPO>
+          token: ${{ secrets.PAT }}
 
       - name: Install Dependencies
         run: npm install
 
       - name: Start Application (Run for 2 min)
         run: |
-          timeout 120 npm start  # ⏳ 2 minutes = 120 seconds
+          timeout 40 npm start
         continue-on-error: true  
 
       - name: Trigger Next Run 
