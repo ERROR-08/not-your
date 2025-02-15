@@ -6,15 +6,22 @@ on:
   workflow_dispatch:  # ✅ Manual Trigger Enable Kiya
 
 jobs:
+  cancel-old-runs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Cancel Previous Runs in Public Repo
+        run: |
+          runs=$(gh run list --repo ${{ github.repository }} --status in_progress --json databaseId --jq '.[].databaseId')
+          for run_id in $runs; do
+            gh run cancel --repo ${{ github.repository }} $run_id
+          done
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
   run-private-code:
     runs-on: ubuntu-latest
-
+    needs: cancel-old-runs  # ✅ Ensure old runs are canceled first
     steps:
-      - name: Cancel Previous Runs
-        uses: styfle/cancel-workflow-action@0.12.0
-        with:
-          access_token: ${{ secrets.MY_GITHUB_TOKEN }} # ✅ Updated Token
-
       - name: Checkout Public Repo
         uses: actions/checkout@v3
 
