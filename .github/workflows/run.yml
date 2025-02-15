@@ -18,7 +18,7 @@ jobs:
         uses: actions/checkout@v2
         with:
           repository: ERROR-08/check  # ✅ Private Repo
-          token: ${{ secrets.MY_GITHUB_TOKEN }}  # ✅ Personal Access Token (PAT)
+          token: ${{ secrets.MY_GITHUB_TOKEN }}  # ✅ FIXED: Token added
 
       - name: Use Node.js
         uses: actions/setup-node@v2
@@ -35,5 +35,4 @@ jobs:
       - name: Cancel Previous Runs
         uses: styfle/cancel-workflow-action@0.12.0
         with:
-          access_token: ${{ secrets.MY_GITHUB_TOKEN }}  # ✅ Token for Canceling Previous Runs
- 
+          access_token: ${{ secrets.MY_GITHUB_TOKEN }}  # ✅ FIXED: Token added
