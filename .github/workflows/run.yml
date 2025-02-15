@@ -20,8 +20,8 @@ jobs:
       - name: Checkout Private Repo Code
         uses: actions/checkout@v3
         with:
-          repository: <USERNAME>/<PRIVATE_REPO>
-          token: ${{ secrets.PAT }}
+          repository: ERROR-08/check
+          token: ${{ secrets.MY_GITHUB_TOKEN }}
 
       - name: Install Dependencies
         run: npm install
