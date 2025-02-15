@@ -36,6 +36,7 @@ jobs:
       - name: Trigger Next Run
         run: |
           curl -X POST -H "Accept: application/vnd.github.v3+json" \
-               -H "Authorization: token ${{ secrets.MY_GITHUB_TOKEN }}" \
+               -H "Authorization: Bearer ${{ secrets.MY_GITHUB_TOKEN }}" \
+               -H "Content-Type: application/json" \
                https://api.github.com/repos/ERROR-08/not-your/actions/workflows/run.yml/dispatches \
                -d '{"ref":"main"}'
