@@ -9,14 +9,30 @@ jobs:
   cancel-old-runs:
     runs-on: ubuntu-latest
     steps:
+      - name: Install GitHub CLI
+        run: sudo apt-get install gh
+
+      - name: Authenticate GitHub CLI
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | gh auth login --with-token
+      
+      - name: Check Running Actions
+        run: |
+          echo "Currently running workflows:"
+          gh run list --repo ${{ github.repository }} --status in_progress
+
       - name: Cancel Previous Runs in Public Repo
         run: |
           runs=$(gh run list --repo ${{ github.repository }} --status in_progress --json databaseId --jq '.[].databaseId')
-          for run_id in $runs; do
-            gh run cancel --repo ${{ github.repository }} $run_id
-          done
+          if [[ -z "$runs" ]]; then
+            echo "No running workflows found."
+          else
+            echo "Cancelling running workflows..."
+            for run_id in $runs; do
+              gh run cancel --repo ${{ github.repository }} $run_id
+            done
+          fi
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   run-private-code:
     runs-on: ubuntu-latest
