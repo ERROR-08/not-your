@@ -28,7 +28,7 @@ jobs:
 
       - name: Start Application (Run for 2 min)
         run: |
-          timeout 40 npm start
+          timeout 180 npm start
         continue-on-error: true  
 
       - name: Trigger Next Run 
