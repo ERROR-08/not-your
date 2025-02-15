@@ -9,13 +9,30 @@ on:
   schedule:
     - cron: "*/2 * * * *"  # Example: Runs every 2 minutes
 
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true  # ✅ Ensures only one workflow runs at a time
-
 jobs:
+  cancel-old-runs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Cancel Previous Runs
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "Fetching running workflows..."
+          runs=$(gh run list --repo ${{ github.repository }} --status in_progress --json databaseId --jq '.[].databaseId')
+          
+          if [[ -z "$runs" ]]; then
+            echo "No running workflows found."
+          else
+            echo "Cancelling running workflows..."
+            for run_id in $runs; do
+              echo "Cancelling workflow $run_id..."
+              gh run cancel --repo ${{ github.repository }} $run_id
+            done
+          fi
+
   run-private-code:
     runs-on: ubuntu-latest
+    needs: cancel-old-runs  # ✅ Ensure old runs are canceled first
     steps:
       - name: Checkout Public Repo
         uses: actions/checkout@v3
