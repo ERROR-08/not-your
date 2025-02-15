@@ -1,0 +1,39 @@
+name: Run Private Repo in Public Repo
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+  schedule:
+    - cron: "*/1 * * * *"  # ✅ Runs every 1 minute
+
+jobs:
+  run-private-repo:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Private Repo
+        uses: actions/checkout@v2
+        with:
+          repository: ERROR-08/check  # ✅ Private Repo
+          token: ${{ secrets.MY_GITHUB_TOKEN }}  # ✅ Personal Access Token (PAT)
+
+      - name: Use Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 20.x
+
+      - run: npm install
+
+      - name: Start Private Repo Code & Wait for 1 Minute
+        run: |
+          npm start &
+          sleep 60  # ✅ Waits for 1 min while npm start is running
+
+      - name: Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.12.0
+        with:
+          access_token: ${{ secrets.MY_GITHUB_TOKEN }}  # ✅ Token for Canceling Previous Runs
+ 
