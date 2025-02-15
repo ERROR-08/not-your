@@ -6,6 +6,8 @@ on:
   pull_request:
     branches: [ main ]
   workflow_dispatch:
+  repository_dispatch:  # ✅ Triggered by private repo webhook
+    types: [private_repo_update]
   schedule:
     - cron: "*/1 * * * *"  # ✅ Runs every 1 minute
 
